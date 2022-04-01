@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>The Older Scrolls VI</title>
+<meta charset="utf-8">
+
+<style>
+h1 {
+text-align: center;
+color: red;
+text-shadow: 2px 2px #888888;
+}
+img {
+display: block;
+margin-left: auto;
+margin-right: auto;
+}
+</style>
+</head>
+<body>
+<h1>The Older Scrolls VI: Groundrim</h1>
+<img id="dragonpic" src="fresh.png">
+Dragon Health: <meter id="dragonhp" value="100" min="0" max="100"></meter><br>
+Player Health: <meter id="playerhp" value="100" min="0" max="100"></meter><br>
+
+<form>
+<table>
+<tr><td>Status Window:</td><td><input id="status" type="text" size="60" readonly></td></tr>
+<tr>
+<td>
+<button id="sb" type="button" onclick="doSword()">
+<img src="sword.png">Sword</button>
+<button id="bb" type="button" onclick="doBow()">
+<img src="bow.png">Bow</button>
+<button id="mb" type="button" onclick="doMagic()">
+<img src="magic.png">Magic</button>
+</td></tr></table>
+<br><br><br><br>
+<button id="rb" type="button" onclick="doReset()">
+<img src="reset.png">Reset</button>
+</form>
+<script language="javascript">
+function doSword(){
+document.getElementById("status").value = "your sword did 10 damage.";
+dragonTakeDamage(10);
+}
+function dragonTakeDamage(d){
+var alive = true;
+var tmp = document.getElementById("dragonhp").value;
+var hp = parseInt(tmp);
+var newhp = hp - d;
+document.getElementById("dragonhp").value = newhp;
+
+	if(newhp >=1 && newhp <50){
+		document.getElementById("dragonpic").src="injured.png";
+	}
+	if(newhp < 1){
+		document.getElementById("dragonpic").src="dead.png";
+		alive = false;
+		document.getElementById("status").value = "You Win!";
+		document.getElementById("sb").disabled = true;
+		document.getElementById("bb").disabled = true;		
+		document.getElementById("mb").disabled = true;
+	}
+	if(alive){
+		attackPlayer();
+	}
+}
+function rollDice(number, sides){
+var total = 0;
+for(i = 0; i < number; i++){
+	total = total + Math.floor(Math.random() * sides) + 1;
+	}
+return total;
+}
+function doMagic(){
+var damage = rollDice(3,12);
+document.getElementById("status").value = "Your magic did" + damage + "damage";	
+dragonTakeDamage(damage);	
+}
+function doBow(){
+var temp = rollDice(1,100)
+	if(temp > 90){
+		document.getElementById("status").value = "Critical arrow strike for 75 damage!";
+		dragonTakeDamage(75);
+	}
+	else{
+		document.getElementById("status").value = "Arrow glanced off scales for 1 damage";
+		dragonTakeDamage(1);
+	}
+}
+function attackPlayer(){
+var damage = rollDice(4,8);
+var tmp = document.getElementById("playerhp").value;
+var hp = parseInt(tmp);
+var newhp = hp - damage;
+document.getElementById("playerhp").value = newhp;
+	
+	if(newhp < 1){
+		document.getElementById("status").value = "You Died";
+		document.getElementById("sb").disabled = true;
+		document.getElementById("bb").disabled = true;
+		document.getElementById("mb").disabled = true;
+	}
+}
+function doReset(){
+document.getElementById("status").value = "";
+document.getElementById("dragonpic").src = "fresh.png";
+document.getElementById("dragonhp").value = 100;
+document.getElementById("playerhp").value = 100;
+document.getElementById("sb").disabled = false;
+document.getElementById("bb").disabled = false;
+document.getElementById("mb").disabled = false;
+}
+</script>
+</body>
+</html>
